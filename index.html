@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的工具箱 | Hiro Web Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Microsoft JhengHei', sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+        .tool-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.2);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- 導航欄 -->
+    <nav class="glass-nav sticky top-0 z-50 py-4 px-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight">
+                <span class="gradient-text">Hiro</span> Tools
+            </h1>
+            <div class="text-sm text-slate-400">
+                便利、快速、輕量
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="flex-grow max-w-6xl mx-auto w-full px-6 py-12">
+        
+        <!-- 標題部分 -->
+        <header class="mb-12 text-center md:text-left">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">工具列表</h2>
+            <p class="text-slate-400 text-lg max-w-2xl">
+                這裡收集了我開發的一些實用網頁工具，旨在提供簡單高效的解決方案。
+            </p>
+        </header>
+
+        <!-- 工具網格 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- 工具 1: QR Code 掃描 -->
+            <a href="qrscan.html" class="tool-card rounded-2xl p-6 flex flex-col h-full group">
+                <div class="w-12 h-12 bg-sky-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">QR Code 掃描器</h3>
+                <p class="text-slate-400 mb-6 flex-grow">
+                    快速掃描並解析 QR Code 內容，支援相機即時掃描與圖片上傳分析。
+                </p>
+                <div class="flex items-center text-sky-400 font-medium group-hover:translate-x-1 transition-transform">
+                    立即使用
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+            <!-- 工具 2: 倒數計時生成器 -->
+            <a href="count_down_generate.html" class="tool-card rounded-2xl p-6 flex flex-col h-full group">
+                <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">倒數計時生成器</h3>
+                <p class="text-slate-400 mb-6 flex-grow">
+                    自訂倒數計時器，適合直播、活動或演講使用，支援個人化設置。
+                </p>
+                <div class="flex items-center text-indigo-400 font-medium group-hover:translate-x-1 transition-transform">
+                    立即使用
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+            <!-- 預留空位 -->
+            <div class="tool-card rounded-2xl p-6 flex flex-col justify-center items-center border-dashed border-2 border-slate-700 bg-transparent opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span class="text-slate-500 font-medium">更多工具開發中...</span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="py-12 border-t border-slate-800 text-center">
+        <p class="text-slate-500 text-sm">
+            &copy; 2024 Hiro. All rights reserved.
+        </p>
+    </footer>
+
+</body>
+</html>

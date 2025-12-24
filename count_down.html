@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期倒數計時器</title>
+    <style>
+        html,body{margin:0;overflow:hidden;}
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: transparent;
+        }
+        
+        #countdown-container {
+            text-align: center;
+            padding: 20px;
+            background-color: transparent;
+        }
+        
+        #countdown {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 0px;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+        }
+        
+        .time-number {
+            font-size: 26px;
+            color: #828282;
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+            height:26px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .time-label {
+            font-size: 8px;
+            color: #828282;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .separator {
+            font-size: 24px;
+            color: #828282;
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown-container">
+        <div id="countdown">
+            <div class="time-unit">
+                <span class="time-number" id="days">00</span>
+                <div class="time-label">Days</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="time-number" id="hours">00</span>
+                <div class="time-label">Hrs</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="time-number" id="minutes">00</span>
+                <div class="time-label">Mins</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-unit">
+                <span class="time-number" id="seconds">00</span>
+                <div class="time-label">Secs</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 日期倒數計時器函數
+        function createCountdown(targetDate) {
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            
+            function updateCountdown() {
+                const now = new Date();
+                // const gmt8Now = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Taipei"}));
+                const target = new Date(targetDate).getTime();
+                const difference = target - now;
+                
+                if (difference > 0) {
+                    // 計算天、時、分、秒
+                    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                    
+                    // 格式化顯示（補零）
+                    daysElement.textContent = days.toString().padStart(2, '0');
+                    hoursElement.textContent = hours.toString().padStart(2, '0');
+                    minutesElement.textContent = minutes.toString().padStart(2, '0');
+                    secondsElement.textContent = seconds.toString().padStart(2, '0');
+                } else {
+                    // 倒數結束
+                    daysElement.textContent = "00";
+                    hoursElement.textContent = "00";
+                    minutesElement.textContent = "00";
+                    secondsElement.textContent = "00";
+                    clearInterval(timer);
+                }
+            }
+            
+            // 立即執行一次
+            updateCountdown();
+            
+            // 每秒更新一次
+            const timer = setInterval(updateCountdown, 1000);
+            
+            return timer;
+        }
+        
+        // 從 URL 參數獲取目標日期，或使用預設日期
+        function getTargetDateFromParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dateParam = urlParams.get('date');
+            
+            if (dateParam) {
+                return dateParam;
+            } else {
+                // 預設倒數到 2025 年 12 月 31 日 23:59:59
+                return '2025-12-31 23:59:59';
+            }
+        }
+        
+        // 啟動倒數計時器
+        window.onload = function() {
+            const targetDate = getTargetDateFromParams();
+            createCountdown(targetDate);
+        };
+    </script>
+</body>
+</html>

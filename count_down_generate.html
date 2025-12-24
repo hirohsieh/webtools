@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倒數計時器網址產生器 - 舒適深色模式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        
+        /* 強制瀏覽器原生元件使用深色模式 */
+        html {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 優化深色模式下日期選擇器的圖示，並微調顏色以符合翡翠綠主題 */
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.8) sepia(1) saturate(5) hue-rotate(100deg);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 min-h-screen flex items-center justify-center p-4 text-slate-200">
+
+    <div class="max-w-md w-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
+        <!-- 標題區域：深綠色調 -->
+        <div class="bg-emerald-900/80 p-6 border-b border-emerald-800/50">
+            <h1 class="text-2xl font-bold text-emerald-50 text-center">倒數計時設定</h1>
+            <p class="text-emerald-300/80 text-sm mt-1 text-center font-medium">選擇目標日期，產生專屬倒數連結</p>
+        </div>
+
+        <!-- 表單區域 -->
+        <div class="p-6 space-y-6">
+            <div>
+                <label for="target-date" class="block text-sm font-medium text-slate-400 mb-2">
+                    選擇目標日期與時間
+                </label>
+                <input type="datetime-local" id="target-date" 
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all appearance-none"
+                >
+            </div>
+
+            <button id="generate-btn" 
+                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform active:scale-[0.98] shadow-lg shadow-emerald-900/20">
+                產生分享網址
+            </button>
+
+            <!-- 結果顯示區域 -->
+            <div id="result-container" class="hidden space-y-4 animate-in fade-in duration-500">
+                <div class="h-px bg-slate-800"></div>
+                
+                <label class="block text-sm font-medium text-slate-400">生成的網址：</label>
+                <div class="relative group">
+                    <textarea id="result-url" readonly 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-emerald-400/80 font-mono h-28 resize-none focus:outline-none cursor-default"
+                    ></textarea>
+                    <button id="copy-btn" 
+                        class="absolute right-2 bottom-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs px-4 py-2 rounded-md transition shadow-md font-medium">
+                        複製網址
+                    </button>
+                </div>
+                
+                <div class="flex justify-center">
+                    <a id="preview-link" target="_blank" class="text-emerald-500 hover:text-emerald-400 text-sm font-medium flex items-center gap-2 transition-colors group">
+                        <span>立即預覽效果</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁尾說明 -->
+        <div class="bg-slate-900/50 p-4 border-t border-slate-800 text-center">
+            <p class="text-[11px] text-slate-500 leading-relaxed uppercase tracking-wider">
+                Target URL: dx1508.github.io
+            </p>
+        </div>
+    </div>
+
+    <!-- 訊息提示框 -->
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-8 py-3 rounded-full text-sm font-medium shadow-2xl opacity-0 transition-all duration-300 pointer-events-none scale-90">
+        已成功複製到剪貼簿！
+    </div>
+
+    <script>
+        const baseUrl = "https://dx1508.github.io/web_tools/count_down";
+        const dateInput = document.getElementById('target-date');
+        const generateBtn = document.getElementById('generate-btn');
+        const resultContainer = document.getElementById('result-container');
+        const resultUrl = document.getElementById('result-url');
+        const copyBtn = document.getElementById('copy-btn');
+        const previewLink = document.getElementById('preview-link');
+        const toast = document.getElementById('toast');
+
+        // 設定預設日期為明天同一時間
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const offset = tomorrow.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(tomorrow - offset)).toISOString().slice(0, 16);
+        dateInput.value = localISOTime;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.remove('opacity-0', 'scale-90');
+            toast.classList.add('opacity-100', 'scale-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'scale-100');
+                toast.classList.add('opacity-0', 'scale-90');
+            }, 2500);
+        }
+
+        generateBtn.addEventListener('click', () => {
+            const selectedValue = dateInput.value;
+            if (!selectedValue) {
+                showToast("請先選擇日期與時間");
+                return;
+            }
+
+            const formattedDate = selectedValue.replace('T', ' ') + ':00';
+            const fullUrl = `${baseUrl}?date=${encodeURIComponent(formattedDate)}`;
+            
+            resultUrl.value = fullUrl;
+            previewLink.href = fullUrl;
+            resultContainer.classList.remove('hidden');
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+
+        copyBtn.addEventListener('click', () => {
+            resultUrl.select();
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showToast("連結已複製 ✨");
+            } else {
+                showToast("複製失敗，請手動複製");
+            }
+        });
+    </script>
+</body>
+</html>
