@@ -8,7 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
         
-        /* 強制瀏覽器原生元件使用深色模式 */
         html {
             color-scheme: dark;
         }
@@ -17,7 +16,6 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
-        /* 優化深色模式下日期選擇器的圖示，並微調顏色以符合翡翠綠主題 */
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
             filter: invert(0.8) sepia(1) saturate(5) hue-rotate(100deg);
             cursor: pointer;
@@ -27,13 +25,11 @@
 <body class="bg-slate-950 min-h-screen flex items-center justify-center p-4 text-slate-200">
 
     <div class="max-w-md w-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
-        <!-- 標題區域：深綠色調 -->
         <div class="bg-emerald-900/80 p-6 border-b border-emerald-800/50">
             <h1 class="text-2xl font-bold text-emerald-50 text-center">倒數計時設定</h1>
             <p class="text-emerald-300/80 text-sm mt-1 text-center font-medium">選擇目標日期，產生專屬倒數連結</p>
         </div>
 
-        <!-- 表單區域 -->
         <div class="p-6 space-y-6">
             <div>
                 <label for="target-date" class="block text-sm font-medium text-slate-400 mb-2">
@@ -49,7 +45,6 @@
                 產生分享網址
             </button>
 
-            <!-- 結果顯示區域 -->
             <div id="result-container" class="hidden space-y-4 animate-in fade-in duration-500">
                 <div class="h-px bg-slate-800"></div>
                 
@@ -75,21 +70,26 @@
             </div>
         </div>
 
-        <!-- 頁尾說明 -->
         <div class="bg-slate-900/50 p-4 border-t border-slate-800 text-center">
-            <p class="text-[11px] text-slate-500 leading-relaxed uppercase tracking-wider">
-                Target URL: hirohsieh.github.io
-            </p>
+            <p id="footer-domain" class="text-[11px] text-slate-500 leading-relaxed uppercase tracking-wider">
+                </p>
         </div>
     </div>
 
-    <!-- 訊息提示框 -->
     <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-8 py-3 rounded-full text-sm font-medium shadow-2xl opacity-0 transition-all duration-300 pointer-events-none scale-90">
         已成功複製到剪貼簿！
     </div>
 
     <script>
-        const baseUrl = "https://hirohsieh.github.io/webtools/count_down";
+        // --- 動態獲取當前網址路徑 ---
+        // window.location.origin 是 https://example.com
+        // window.location.pathname 是 /path/to/page.html
+        // 使用 .split('?')[0] 是為了確保如果當前 URL 已經帶有參數，產生的連結不會重複疊加
+        const baseUrl = window.location.href.split('?')[0];
+        
+        // 更新頁尾顯示當前網域
+        document.getElementById('footer-domain').textContent = `Target Domain: ${window.location.hostname}`;
+
         const dateInput = document.getElementById('target-date');
         const generateBtn = document.getElementById('generate-btn');
         const resultContainer = document.getElementById('result-container');
@@ -122,6 +122,7 @@
                 return;
             }
 
+            // 格式化日期並編碼
             const formattedDate = selectedValue.replace('T', ' ') + ':00';
             const fullUrl = `${baseUrl}?date=${encodeURIComponent(formattedDate)}`;
             
@@ -134,11 +135,14 @@
 
         copyBtn.addEventListener('click', () => {
             resultUrl.select();
-            const successful = document.execCommand('copy');
-            if (successful) {
-                showToast("連結已複製 ✨");
+            // 使用現代化的 Clipboard API (如果瀏覽器支援) 或 fallback 到 execCommand
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(resultUrl.value).then(() => {
+                    showToast("連結已複製 ✨");
+                });
             } else {
-                showToast("複製失敗，請手動複製");
+                document.execCommand('copy');
+                showToast("連結已複製 ✨");
             }
         });
     </script>
