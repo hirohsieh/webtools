@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>倒數計時器網址產生器 - 舒適深色模式</title>
+    <title>倒數計時器網址產生器 - 專業深色模式</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
@@ -17,9 +17,9 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
-        /* 優化日期選擇器的圖示顏色 */
+        /* 調整日期選擇器圖示為藍色系 */
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.8) sepia(1) saturate(5) hue-rotate(100deg);
+            filter: invert(0.8) sepia(1) saturate(5) hue-rotate(190deg);
             cursor: pointer;
         }
     </style>
@@ -27,9 +27,9 @@
 <body class="bg-slate-950 min-h-screen flex items-center justify-center p-4 text-slate-200">
 
     <div class="max-w-md w-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
-        <div class="bg-emerald-900/80 p-6 border-b border-emerald-800/50">
-            <h1 class="text-2xl font-bold text-emerald-50 text-center">倒數計時設定</h1>
-            <p class="text-emerald-300/80 text-sm mt-1 text-center font-medium">選擇目標日期，產生專屬倒數連結</p>
+        <div class="bg-blue-900/60 p-6 border-b border-blue-800/50">
+            <h1 class="text-2xl font-bold text-blue-50 text-center">倒數計時設定</h1>
+            <p class="text-blue-300/80 text-sm mt-1 text-center font-medium">選擇目標日期，產生專屬倒數連結</p>
         </div>
 
         <div class="p-6 space-y-6">
@@ -38,12 +38,12 @@
                     選擇目標日期與時間
                 </label>
                 <input type="datetime-local" id="target-date" 
-                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all appearance-none"
+                    class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all appearance-none"
                 >
             </div>
 
             <button id="generate-btn" 
-                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform active:scale-[0.98] shadow-lg shadow-emerald-900/20">
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform active:scale-[0.98] shadow-lg shadow-blue-900/30">
                 產生分享網址
             </button>
 
@@ -53,16 +53,16 @@
                 <label class="block text-sm font-medium text-slate-400">生成的網址：</label>
                 <div class="relative group">
                     <textarea id="result-url" readonly 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-emerald-400/80 font-mono h-28 resize-none focus:outline-none cursor-default"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-blue-400/80 font-mono h-28 resize-none focus:outline-none cursor-default"
                     ></textarea>
                     <button id="copy-btn" 
-                        class="absolute right-2 bottom-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs px-4 py-2 rounded-md transition shadow-md font-medium">
+                        class="absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-600 text-white text-xs px-4 py-2 rounded-md transition shadow-md font-medium">
                         複製網址
                     </button>
                 </div>
                 
                 <div class="flex justify-center">
-                    <a id="preview-link" target="_blank" class="text-emerald-500 hover:text-emerald-400 text-sm font-medium flex items-center gap-2 transition-colors group">
+                    <a id="preview-link" target="_blank" class="text-blue-500 hover:text-blue-400 text-sm font-medium flex items-center gap-2 transition-colors group">
                         <span>立即預覽效果</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -78,22 +78,16 @@
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-8 py-3 rounded-full text-sm font-medium shadow-2xl opacity-0 transition-all duration-300 pointer-events-none scale-90">
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-3 rounded-full text-sm font-medium shadow-2xl opacity-0 transition-all duration-300 pointer-events-none scale-90">
         已成功複製到剪貼簿！
     </div>
 
     <script>
-        /**
-         * 1. 彈性 Base URL 計算
-         * 假設目前在 https://hirohsieh.github.io/webtools/generator.html
-         * directory 會取得 /webtools
-         * baseUrl 會變成 https://hirohsieh.github.io/webtools/count_down
-         */
+        // 1. 動態計算 baseUrl (同目錄下的 count_down)
         const currentPath = window.location.pathname;
         const directory = currentPath.substring(0, currentPath.lastIndexOf('/'));
         const baseUrl = window.location.origin + directory + '/count_down';
 
-        // 初始化頁尾資訊
         document.getElementById('footer-info').textContent = `Target: ${window.location.hostname}${directory}/count_down`;
 
         const dateInput = document.getElementById('target-date');
@@ -104,14 +98,13 @@
         const previewLink = document.getElementById('preview-link');
         const toast = document.getElementById('toast');
 
-        // 設定預設日期為明天同一時間
+        // 設定預設日期為明天
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         const offset = tomorrow.getTimezoneOffset() * 60000;
         const localISOTime = (new Date(tomorrow - offset)).toISOString().slice(0, 16);
         dateInput.value = localISOTime;
 
-        // Toast 提示函式
         function showToast(message) {
             toast.textContent = message;
             toast.classList.remove('opacity-0', 'scale-90');
@@ -122,7 +115,6 @@
             }, 2500);
         }
 
-        // 產生網址邏輯
         generateBtn.addEventListener('click', () => {
             const selectedValue = dateInput.value;
             if (!selectedValue) {
@@ -130,7 +122,6 @@
                 return;
             }
 
-            // 格式化日期：將 2026-08-22T00:00 轉為 2026-08-22 00:00:00
             const formattedDate = selectedValue.replace('T', ' ') + ':00';
             const fullUrl = `${baseUrl}?date=${encodeURIComponent(formattedDate)}`;
             
@@ -138,20 +129,16 @@
             previewLink.href = fullUrl;
             resultContainer.classList.remove('hidden');
             
-            // 捲動到底部方便查看結果
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         });
 
-        // 複製按鈕邏輯
         copyBtn.addEventListener('click', () => {
             resultUrl.select();
             if (navigator.clipboard && window.isSecureContext) {
-                // 現代瀏覽器安全做法
                 navigator.clipboard.writeText(resultUrl.value).then(() => {
                     showToast("連結已複製 ✨");
                 });
             } else {
-                // Fallback 舊做法
                 document.execCommand('copy');
                 showToast("連結已複製 ✨");
             }
